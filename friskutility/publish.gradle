@@ -1,0 +1,61 @@
+apply plugin: 'com.jfrog.bintray'
+group 'com.frisk.friskutilities'
+version '1.0.0'
+
+project.ext {
+    mavGitUrl = 'https://github.com/kunalmanocha98/FriskUtilities.git'
+    mavProjectName = 'FriskUtility'
+    mavLibraryLicenses = ["Apache-2.0":'http://www.apache.org/licenses/LICENSE-2.0.txt']
+    mavLibraryDescription = "\t\n" + "An Android library that will be your building block in developing"
+    mavPublishToMavenLocal = true
+    mavSiteUrl = 'https://github.com/kunalmanocha98/FriskUtilities'
+}
+//task sourcesJar(type: Jar) {
+//    from android.sourceSets.main.java.srcDirs
+//    classifier = 'sources'
+//}
+//
+//task javadoc(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
+//
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+//
+//artifacts {
+//    archives javadocJar
+//    archives sourcesJar
+//}
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+}
+def properties = new Properties()
+properties.load(new FileInputStream(rootProject.file("local.properties")))
+
+bintray {
+    user =properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    publications = ['mavenPublish']
+    configurations = ['archives']
+    override = true
+    pkg {
+        repo = 'FriskUtility'
+        name = 'FriskUtility'
+        description = "An Android library that will be your building block in developing"
+        publicDownloadNumbers = true
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/kunalmanocha98/FriskUtilities'
+        version {
+            name = this.version
+            desc = "Version ${this.version}"
+            released = new Date()
+            vcsTag = this.version
+        }
+    }
+}
+apply from: 'https://raw.githubusercontent.com/sky-uk/gradle-maven-plugin/master/gradle-mavenizer.gradle'
+
